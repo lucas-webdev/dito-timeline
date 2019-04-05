@@ -1,35 +1,32 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 
-export default class TimelineBox extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			isLoading: false,
-			events: []
-		}
-	}
+function sortEvents(events) {
+	return events.sort((a, b) => {
+		const timestampA = a.custom_data.find(el => el.key === 'transaction_id').value;
+		const timestampB = b.custom_data.find(el => el.key === 'transaction_id').value
 
-	componentDidMount() {
-		fetch('https://storage.googleapis.com/dito-questions/events.json')
-		.then(response => response.json())
-		.then(eventsList => {
-			this.setState({events: eventsList.events});
-			console.log(this.state.events);
-		})
-		.catch(console.log);
-	}
+		return timestampA - timestampB;
+	});
+}
 
-	render() {
-		const eventList = this.state.events.map((event) =>
-		  <li key={event.timestamp}>{event.event}</li>
-		);
-		return (
-			<div>
-				<ul>
-					{eventList}
-				</ul>
+export default function TimelineBox(props) {
+	const events = sortEvents(props.eventsList);	
+
+	const eventList = events.map((event) =>
+	  <li key={event.timestamp}>{event.timestamp}</li>
+	);
+
+	return <div className="timeline-box">
+		<div className="timeline-box__header"></div>
+		<div className="timeline-box__content">
+			<div className="timeline-box__content--sub-header">
+				<span>Produto</span>
+				<span>Preço</span>
 			</div>
-		);
-	}
+			<div className="timeline-box__content--list">
+				{eventList}
+			</div>
+		</div>
+	</div>
 }
