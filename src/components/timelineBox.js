@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 
 function sortEvents(events) {
 	return events.sort((a, b) => {
-		return a.timestamp - b.timestamp;
+  	return new Date(b.timestamp) - new Date(a.timestamp)
 	});
 }
 
@@ -15,7 +15,9 @@ export default function TimelineBox(props) {
 	const finalPurchases = props.purchases.filter( purchase => purchase.event === 'comprou');
 	const productPurchases = props.purchases.filter( product => product.event === 'comprou-produto');
 
-	let fullPurchases = finalPurchases.map(p => {
+	let sortedPurchases = sortEvents(finalPurchases);
+
+	let fullPurchases = sortedPurchases.map(p => {
 		return {
 			date: new Date(p.timestamp).toLocaleDateString(),
 			time: new Date(p.timestamp).toLocaleTimeString(),
