@@ -4,5 +4,5 @@ import Timeline from './components/timeline';
 
 ReactDOM.render(
   <Timeline />,
-  document.getElementById('root')
+  document.getElementById('timeline')
 );
