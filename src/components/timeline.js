@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
 import TimelineBox from './timelineBox';
+import axios from 'axios';
 import '../index.css';
 
 export default class Timeline extends Component {
@@ -13,11 +14,10 @@ export default class Timeline extends Component {
 	}
 
 	componentDidMount() {
-		fetch('https://storage.googleapis.com/dito-questions/events.json')
-		.then(response => response.json())
-		.then(eventsList => {
+		axios.get('https://storage.googleapis.com/dito-questions/events.json')
+		.then(response => {
 			this.setState({
-				events: this.sortEvents(eventsList.events),
+				events: this.sortEvents(response.data.events),
 				isLoading: false
 			});
 		})
