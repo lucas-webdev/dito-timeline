@@ -9,32 +9,33 @@ export default class Timeline extends Component {
 		super(props);
 		this.state = {
 			isLoading: true,
-			events: []
+			finalPurchases: [],
+			productsPurchases: []
 		}
 	}
 
 	componentDidMount() {
 		axios.get('https://storage.googleapis.com/dito-questions/events.json')
 		.then(response => {
+			let finalPurchasesArray = response.data.events.filter( purchase => purchase.event === 'comprou');
+			let productsPurchasesArray = response.data.events.filter( product => product.event === 'comprou-produto');
 			this.setState({
-				events: this.sortEvents(response.data.events),
+				finalPurchases: finalPurchasesArray,
+				productsPurchases: productsPurchasesArray,
 				isLoading: false
 			});
 		})
 		.catch(console.log);
 	}
 
-	sortEvents(events) {
-		return events.sort((a, b) => {
-			return a.timestamp - b.timestamp;
-		});
+	separatePurchases() {
 	}
 
 	render() {
 		if(!this.state.isLoading){
 			return (
 				<div class="purchase-timeline">
-					<TimelineBox purchases={this.state.events} />
+					<TimelineBox finalPurchases={this.state.finalPurchases} productsPurchases={this.state.productsPurchases} />
 				</div>
 			);
 		}
